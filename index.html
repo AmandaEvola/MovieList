@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            position: relative;
+        }
+        h1 {
+            color: #ff5733;
+            margin-top: 20px;
+        }
+        .movie-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        .movie {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            margin: 10px;
+            padding: 20px;
+            max-width: 300px;
+            text-align: center;
+            position: relative;
+        }
+        .movie img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+        .movie h2 {
+            color: #ff5733;
+        }
+        .movie p {
+            color: #333333;
+        }
+        .movie .fun-fact {
+            font-style: italic;
+            color: #666666;
+            margin-top: 10px;
+        }
+        .movie-list-info {
+            color: #666666;
+            font-style: italic;
+            margin-top: 20px;
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+        .search-container {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+        }
+        .search-input {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-right: 10px;
+        }
+        .search-button {
+            padding: 10px 20px;
+            border-radius: 5px;
+            background-color: #ff5733;
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Movie List</h1>
+
+    <!-- Search Container -->
+    <div class="search-container">
+        <input type="text" class="search-input" id="searchInput" placeholder="Search for movies...">
+        <button class="search-button" onclick="searchMovies()">Search</button>
+    </div>
+
+    <!-- Movie Container -->
+    <div class="movie-container" id="movieContainer">
+        <!-- Movie Cards will be inserted here -->
+        <div class="movie">
+            <img src="https://cdn.britannica.com/61/177761-050-F38C22B1/Christopher-Reeve-Superman-Richard-Donner.jpg" alt="Superman">
+        </div>
+    </div>
+
+    <!-- Movie List Info -->
+    <p class="movie-list-info">Scroll down for more info</p>
+
+    <!-- Script for searching movies -->
+    <script>
+        function searchMovies() {
+            var query = document.getElementById("searchInput").value;
+            var url = `https://api.themoviedb.org/3/search/movie?api_key=34e71e9b906a4c80db7d91bf64ed4b02&query=${query}`;
+
+            fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                // Handle the retrieved movie data
+                console.log(data);
+                displaySearchedMovies(data.results);
+            })
+            .catch(error => console.log(error));
+        }
+
+        function displaySearchedMovies(movies) {
+            var movieContainer = document.getElementById("movieContainer");
+            movieContainer.innerHTML = "";
+
+            movies.forEach(movie => {
+                var movieCard = `
+                    <div class="movie">
+                        <img src="https://image.tmdb.org/t/p/w500/${movie.poster_path}" alt="${movie.title}">
+                        <h2>${movie.title}</h2>
+                        <p>Release Date: ${movie.release_date}</p>
+                        <p>Vote Average: ${movie.vote_average}</p>
+                        <p class="overview">${movie.overview}</p>
+                    </div>
+                `;
+                movieContainer.innerHTML += movieCard;
+            });
+        }
+    </script>
+</body>
+</html>
